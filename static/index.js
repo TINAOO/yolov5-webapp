@@ -1,5 +1,10 @@
 window.onload = () => {
   $("#sendbutton").click(() => {
+    $("#loader").css("visibility", "visible");
+    $("#link1").css("visibility", "hidden");
+    $("#link2").css("visibility", "hidden");
+    $("#row").css("visibility", "hidden");
+
     imagebox = $("#imagebox");
     link = $("#link");
     input = $("#imageinput")[0];
@@ -7,9 +12,9 @@ window.onload = () => {
       let formData = new FormData();
       formData.append("video", input.files[0]);
       $.ajax({
-        url: "/detect", // fix this to your liking
+        url: "/detect", 
         type: "POST",
-        data: formData,
+        data: formData, // get data from app.py in the format of [video_name : row_number]
         cache: false,
         processData: false,
         contentType: false,
@@ -18,58 +23,20 @@ window.onload = () => {
           console.log(data.getAllResponseHeaders());
           $("#link").css("visibility", "hidden");
         },
-        success: function (data) {
-          console.log('DATA: ',data);
-          // bytestring = data["status"];
-          // image = bytestring.split("'")[1];
-          alert("Success");
-          $("#link").css("visibility", "visible");
-          $("#link").click(function() {
-            $("#link").css("visibility", "hidden");
-          })
-          $("#download").attr("href", "static/" + data);
+        success: function (data) { // data we got from app.py in the format of [video_name : row_number]
+          $("#loader").css("visibility", "hidden");
+          vid_name = data.split(":")[0] // parse vid name from data
+          num_rows = data.split(":")[1] // parse row count from data
+          $("#link1").css("visibility", "visible");
+          $("#link2").css("visibility", "visible");
+          $("#row").css("visibility", "visible");
+          $("#download").attr("href", "static/" + vid_name); // download link for processed video
+          $("#download-txt").attr("href", "static/" + vid_name.split(".")[0]+"_result.txt"); // download link for text result
+          $("#row").html("number of rows: "+num_rows) // pass number of rows to ---> index.html
         },
       });
     }
   });
-
-  $("#opencam").click(() => {
-    console.log("evoked openCam");
-    $.ajax({
-      url: "/opencam",
-      type: "GET",
-      error: function (data) {
-        console.log("upload error", data);
-      },
-      success: function (data) {
-        console.log(data);
-      }
-    });
-  })
-};
-
-
-function readUrl(input) {
-  imagebox = $("#imagebox");
-  console.log(imagebox);
-  console.log("evoked readUrl");
-  if (input.files && input.files[0]) {
-    let reader = new FileReader();
-    reader.onload = function (e) {
-      console.log(e.target);
-
-      imagebox.attr("src", e.target.result);
-      //   imagebox.height(500);
-      //   imagebox.width(800);
-    };
-    reader.readAsDataURL(input.files[0]);
-  }
 }
 
 
-function openCam(e){
-  console.log("evoked openCam");
-  e.preventDefault();
-  console.log("evoked openCam");
-  console.log(e);
-}
