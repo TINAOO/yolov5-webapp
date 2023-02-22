@@ -76,7 +76,6 @@ def detect():
             file.write(line+"\n")
             
     obj = secure_filename(video.filename) # video file name. For instance, street_vid.mp4
-    print('OBJ ',obj)
     data = obj + ":" + str(count) # return file name and count of rows as data to ---> index.js file
     return data
 
