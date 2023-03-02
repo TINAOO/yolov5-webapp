@@ -32,7 +32,7 @@ window.onload = () => {
           $("#row").css("visibility", "visible");
           $("#download").attr("href", "static/" + vid_name); // download link for processed video
           $("#download-txt").attr("href", "static/" + vid_name.split(".")[0]+"_result.txt"); // download link for text result
-          $("#row").html("number of rows: "+num_rows) // pass number of rows to ---> index.html
+          $("#row").html("number of particles: "+num_rows) // pass number of rows to ---> index.html
         },
       });
     }
